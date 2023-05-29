@@ -1,4 +1,5 @@
 ﻿using Graphql_API.Contracts;
+using Graphql_API.Entities;
 using Graphql_API.Entities.Context;
 using System;
 
@@ -12,5 +13,7 @@ namespace Graphql_API
         {
             _db = context;
         }
+
+        public IEnumerable<Owner> GetAll() => _db.Owners.ToList();
     }
 }

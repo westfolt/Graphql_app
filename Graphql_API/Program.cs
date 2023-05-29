@@ -1,5 +1,10 @@
+using GraphQL;
+using GraphQL.MicrosoftDI;
+using GraphQL.Types;
 using Graphql_API.Contracts;
 using Graphql_API.Entities.Context;
+using Graphql_API.GraphQL.GraphQLQueries;
+using Graphql_API.GraphQL.GraphQLSchema;
 using Microsoft.EntityFrameworkCore;
 
 namespace Graphql_API
@@ -10,11 +15,20 @@ namespace Graphql_API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddDbContext<ApplicationContext>(opt => 
+            builder.Services.AddDbContext<ApplicationContext>(opt =>
                 opt.UseSqlServer(builder.Configuration.GetConnectionString("graphqlConString")));
 
             builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+
+            builder.Services.AddSingleton<ISchema, AppSchema>(services => new AppSchema(new SelfActivatingServiceProvider(services)));
+            builder.Services.AddGraphQL(options =>
+                options.ConfigureExecution((opt, next) =>
+                {
+                    opt.EnableMetrics = true;
+                    return next(opt);
+                }).AddSystemTextJson()
+            );
 
             // Add services to the container.
             builder.Services.AddAuthorization();
@@ -30,11 +44,14 @@ namespace Graphql_API
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
+                app.UseGraphQLAltair();
             }
 
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
+
+            app.UseGraphQL<ISchema>();
 
             app.Run();
         }
