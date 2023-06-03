@@ -44,7 +44,7 @@ namespace Graphql_API
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
-                app.UseGraphQLAltair();
+                app.UseGraphQLPlayground();
             }
 
             app.UseHttpsRedirection();

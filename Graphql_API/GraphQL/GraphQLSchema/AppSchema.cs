@@ -7,7 +7,7 @@ namespace Graphql_API.GraphQL.GraphQLSchema
     public class AppSchema : Schema
     {
         public AppSchema(IServiceProvider provider)
-            :base(provider)
+            : base(provider)
         {
             Query = provider.GetRequiredService<AppQuery>();
         }
