@@ -5,6 +5,7 @@ using Graphql_API.Contracts;
 using Graphql_API.Entities.Context;
 using Graphql_API.GraphQL.GraphQLQueries;
 using Graphql_API.GraphQL.GraphQLSchema;
+using Graphql_API.GraphQL.GraphQLTypes;
 using Microsoft.EntityFrameworkCore;
 
 namespace Graphql_API
@@ -20,8 +21,13 @@ namespace Graphql_API
 
             builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+            builder.Services.AddScoped<AppQuery>();
+            builder.Services.AddScoped<OwnerType>();
+            builder.Services.AddScoped<AccountType>();
+            builder.Services.AddScoped<AccountTypeEnumType>();
 
-            builder.Services.AddSingleton<ISchema, AppSchema>(services => new AppSchema(new SelfActivatingServiceProvider(services)));
+            builder.Services.AddScoped<ISchema, AppSchema>(services => 
+                new AppSchema(new FuncServiceProvider(type => services.GetRequiredService(type))));
             builder.Services.AddGraphQL(options =>
                 options.ConfigureExecution((opt, next) =>
                 {
