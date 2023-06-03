@@ -7,6 +7,7 @@ using Graphql_API.GraphQL.GraphQLQueries;
 using Graphql_API.GraphQL.GraphQLSchema;
 using Graphql_API.GraphQL.GraphQLTypes;
 using Microsoft.EntityFrameworkCore;
+using GraphQL.DataLoader;
 
 namespace Graphql_API
 {
@@ -19,10 +20,13 @@ namespace Graphql_API
             builder.Services.AddDbContext<ApplicationContext>(opt =>
                 opt.UseSqlServer(builder.Configuration.GetConnectionString("graphqlConString")));
 
+            builder.Services.AddSingleton<IDataLoaderContextAccessor, DataLoaderContextAccessor>();
             builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
             builder.Services.AddScoped<AppQuery>();
+            builder.Services.AddScoped<AppMutation>();
             builder.Services.AddScoped<OwnerType>();
+            builder.Services.AddScoped<OwnerInputType>();
             builder.Services.AddScoped<AccountType>();
             builder.Services.AddScoped<AccountTypeEnumType>();
 
@@ -33,7 +37,7 @@ namespace Graphql_API
                 {
                     opt.EnableMetrics = true;
                     return next(opt);
-                }).AddSystemTextJson()
+                }).AddSystemTextJson().AddDataLoader()
             );
 
             // Add services to the container.
