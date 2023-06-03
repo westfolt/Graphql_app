@@ -4,18 +4,17 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:57984",
-      "sslPort": 44377
+      "applicationUrl": "http://localhost:1546",
+      "sslPort": 44323
     }
   },
   "profiles": {
-    "Graphql_API": {
+    "GraphQLConsumer": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "launchBrowser": false,
-      "launchUrl": "ui/playground",
-      "applicationUrl": "https://localhost:7021;http://localhost:5062",
-      
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "https://localhost:7224;http://localhost:5100",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
